@@ -66,16 +66,44 @@
         }
 
         * { box-sizing: border-box; }
+        
+        /* 🌟 가로 스크롤 완벽 차단 및 화면 꽉 채우기 */
+        html, body {
+            width: 100%;
+            overflow-x: hidden; 
+            margin: 0;
+            padding: 0;
+        }
+        
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 10px; background-color: var(--page-bg); margin: 0; color: var(--text-main); 
-            transition: background-color 0.3s;overscroll-behavior-y: none; 
-    -webkit-overflow-scrolling: touch;
-}
+            background-color: var(--page-bg); 
+            color: var(--text-main); 
+            transition: background-color 0.3s;
+            overscroll-behavior-y: none; 
+            -webkit-overflow-scrolling: touch;
+        }
         
+        /* 🌟 컨테이너 여백 및 모서리 둥글기 제거 (전체화면 느낌) */
         .container { 
-            max-width: 600px; margin: auto; background: var(--container-bg); padding: 16px; 
-            border-radius: 24px; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4); 
+            max-width: 600px; 
+            min-height: 100vh;
+            margin: auto; 
+            background: var(--container-bg); 
+            padding: 16px; 
+            border-radius: 0; 
+            box-shadow: none; 
+            overflow-x: hidden;
+        }
+
+        /* 화면이 넓은 PC/태블릿에서만 박스 형태로 둥글게 표시 */
+        @media (min-width: 600px) {
+            body { padding: 10px; }
+            .container { 
+                min-height: auto; 
+                border-radius: 24px; 
+                box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4); 
+            }
         }
         
         /* HEADER & INPUTS */
@@ -126,8 +154,8 @@
         .tl-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-sub); z-index: 1; border: 2px solid var(--container-bg); }
         .time-strip-row .tl-dot { width: 12px; height: 12px; background-color: var(--strip-accent); border: 2px solid var(--page-bg); }
 
-        /* NOW Marker */
-        .now-marker { position: absolute; left: 0; right: -560px; height: 2px; background-color: var(--timeline-now); z-index: 10; pointer-events: none; display: flex; align-items: center; }
+        /* NOW Marker - 🌟 가로 폭주를 막기 위해 width 수정 */
+        .now-marker { position: absolute; left: 0; width: 100vw; height: 2px; background-color: var(--timeline-now); z-index: 10; pointer-events: none; display: flex; align-items: center; }
         .now-badge { 
             background-color: var(--timeline-now); 
             color: white; 
@@ -155,12 +183,10 @@
         .data-row td { background: var(--input-bg); padding: 8px 2px; text-align: center; vertical-align: middle; border-bottom: 1px solid var(--card-border); position: relative;}
         .data-row:first-child td { border-top: 1px solid var(--card-border); }
         
-        /* 🌟 [수정됨] !important 추가: 어떤 경우에도 활성화 배경색이 최우선 적용되도록 함 */
         .data-row.active-row td:not(.tl-col) { background-color: var(--row-active-bg) !important; }
 
-        /* 🌟 [수정됨] flex 제거하고 block으로 변경: 배경색 꽉 차게 만듦 */
-        .type-cell { height: auto; } /* flex 제거 */
-        .type-label { font-size: 0.85rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; display: block; /* block으로 변경 */ }
+        .type-cell { height: auto; }
+        .type-label { font-size: 0.85rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; display: block; }
         .dur-badge { background-color: var(--text-main); color: var(--container-bg); padding: 2px 6px; border-radius: 6px; font-size: 0.9rem; font-weight: 700; font-family: 'SF Mono', monospace; display: inline-block; }
 
         td.status-duty { background-color: var(--duty-bg); color: var(--duty-text); border-left: 1px solid rgba(0,0,0,0.05); font-size: 1.4rem; line-height: 1; }
@@ -396,28 +422,24 @@
             if(saved.tabData) Object.keys(saved.tabData).forEach(id => setVal(id, saved.tabData[id]));
             if(saved.tab) switchTab(saved.tab);
         } else {
-            // 🟢 초기화(Reset) 및 최초 실행 시 기본값 설정
             document.getElementById('g_flightH').value = 12; 
 
-            // 1. 모든 탭의 '마지막 교대' -> 1시간 30분
             const lastTabs = ['3p', '4p1', '5p'];
             lastTabs.forEach(tab => {
                 if(document.getElementById(`${tab}_lastH`)) {
-                    document.getElementById(`${tab}_lastH`).value = 1;  // 1시간
-                    document.getElementById(`${tab}_lastM`).value = 30; // 30분
+                    document.getElementById(`${tab}_lastH`).value = 1; 
+                    document.getElementById(`${tab}_lastM`).value = 30; 
                 }
             });
 
-            // 2. [4P2] 탭의 '1ST 근무' -> 2시간 00분
             if(document.getElementById('4p2_fH')) { 
-                document.getElementById('4p2_fH').value = 2; // 2시간
-                document.getElementById('4p2_fM').value = 0; // 0분
+                document.getElementById('4p2_fH').value = 2; 
+                document.getElementById('4p2_fM').value = 0; 
             }
 
-            // 3. [4P2] 탭의 '5TH 근무' -> 1시간 30분
             if(document.getElementById('4p2_lH')) { 
-                document.getElementById('4p2_lH').value = 1;  // 1시간
-                document.getElementById('4p2_lM').value = 30; // 30분
+                document.getElementById('4p2_lH').value = 1;  
+                document.getElementById('4p2_lM').value = 30; 
             }
 
             switchTab('4p1');
@@ -579,7 +601,6 @@
         const tbody = document.getElementById(tbodyId);
         tbody.innerHTML = '';
 
-        // 🎚️ 비율 조절: 1분당 1.5픽셀
         const PX_PER_MIN = 0.35; 
         const MIN_HEIGHT = 65; 
 
@@ -694,19 +715,15 @@
 function saveState() {
         const state = { tab: currentTab, global: {}, tabData: {} };
         
-        // 1. 공통 데이터 저장 (이륙시간, 비행시간 등)
         document.querySelectorAll('.save-global').forEach(el => state.global[el.id] = el.value);
         document.querySelectorAll('.header-select').forEach(el => state.global[el.id] = el.value);
         
-        // 2. [수정됨] 모든 탭의 데이터 저장 (보이는 탭뿐만 아니라 숨겨진 탭의 값도 모두 저장)
-        // 기존: document.querySelectorAll(`.save-${currentTab}`).forEach(...) 
-        // 변경: 모든 탭 클래스를 다 선택
         const allTabInputs = document.querySelectorAll('.save-3p, .save-4p1, .save-4p2, .save-5p');
         allTabInputs.forEach(el => state.tabData[el.id] = el.value);
         
         localStorage.setItem('flightDutyFinalV65', JSON.stringify(state));
     }
-    // Modal & Drag Logic
+
     const resetBtn = document.getElementById('resetBtn');
     const modal = document.getElementById('resetModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -721,16 +738,13 @@ function saveState() {
     };
     closeModalBtn.onclick = () => { modal.classList.remove('show'); };
     confirmResetBtn.onclick = () => { 
-    // 1. 저장소 데이터 삭제
     localStorage.removeItem('flightDutyFinalV65'); 
     
-    // 2. 화면의 모든 입력값을 '최초 실행 기본값'으로 강제 복구
     document.getElementById('g_flightH').value = 12; 
     document.getElementById('g_flightM').value = 0; 
     document.getElementById('g_takeOffH').value = 0; 
     document.getElementById('g_takeOffM').value = 0; 
 
-    // 모든 탭의 '마지막 교대' -> 1시간 30분
     ['3p', '4p1', '5p'].forEach(tab => {
         if(document.getElementById(`${tab}_lastH`)) {
             document.getElementById(`${tab}_lastH`).value = 1;
@@ -738,7 +752,6 @@ function saveState() {
         }
     });
 
-    // 4P2 탭 근무 시간 복구
     if(document.getElementById('4p2_fH')) { 
         document.getElementById('4p2_fH').value = 2;
         document.getElementById('4p2_fM').value = 0;
@@ -748,12 +761,10 @@ function saveState() {
         document.getElementById('4p2_lM').value = 30;
     }
 
-    // 3. 기본 탭(4P1)으로 이동 및 화면 업데이트
     switchTab('4p1');
     setZone();
     update();
 
-    // 4. 모달 닫기
     modal.classList.remove('show'); 
     alert("새로고침 없이 설정이 성공적으로 초기화되었습니다.");
 };
