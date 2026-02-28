@@ -70,7 +70,6 @@
         /* 🌟 가로 스크롤 완벽 차단 및 화면 꽉 채우기 */
         html, body {
             width: 100%;
-            overflow-x: hidden; 
             margin: 0;
             padding: 0;
         }
@@ -80,7 +79,6 @@
             background-color: var(--page-bg); 
             color: var(--text-main); 
             transition: background-color 0.3s;
-            overscroll-behavior-y: none; 
             -webkit-overflow-scrolling: touch;
         }
         
@@ -203,7 +201,30 @@
         .ts-label { font-size: 0.65rem; opacity: 0.6; font-weight: 700; margin-top: 2px; }
         .ts-k { color: var(--strip-accent); } 
         .alert-msg { background: #fef2f2; color: #b91c1c; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 8px; border: 1px solid #fecaca; font-size: 0.85rem; }
-
+/* 우측 하단 플로팅 테마 토글 버튼 (FAB) */
+.fab-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 22px;
+    border: none;
+    cursor: pointer;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background-color 0.3s;
+    background-color: var(--card-base-bg);
+    color: var(--text-main);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--card-border);
+}
+.fab-btn:active {
+    transform: scale(0.92);
+}
         /* Modal */
         .modal-overlay {
             display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
@@ -237,8 +258,7 @@
                 <select id="h_offset" class="header-select"></select>
             </div>
             <button class="icon-btn" id="resetBtn">🔄</button>
-            <button class="icon-btn" id="themeBtn">☀️</button>
-        </div>
+            </div>
     </div>
 
     <div class="global-row">
@@ -345,7 +365,16 @@
         </table>
     </div>
 </div>
+<div id="table-5p" class="table-container">
+        <table>
+            <thead><tr><th class="tl-col"></th><th width="15%">구분</th><th width="17%">PIC</th><th width="17%">C2</th><th width="17%">C3</th><th width="17%">F1</th><th width="17%">F2</th></tr></thead>
+            <tbody id="tbody-5p"></tbody>
+        </table>
+    </div>
+</div> <button type="button" class="fab-btn" id="themeBtn">☀️</button>
 
+<div id="resetModal" class="modal-overlay">
+    <div class="modal-content" id="modalDrag">
 <div id="resetModal" class="modal-overlay">
     <div class="modal-content" id="modalDrag">
         <div class="modal-header" id="modalHeader">
